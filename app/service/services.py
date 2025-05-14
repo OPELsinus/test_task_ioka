@@ -87,7 +87,7 @@ async def create_exchange_response(
             return response_data
 
         from_account.balance = float(from_account.balance) - request_body.amount
-        to_account.balance = float(to_account.balance) + converted_amount
+        to_account.balance = float(to_account.balance) + converted_amount * 0.97
 
         session.commit()
 
