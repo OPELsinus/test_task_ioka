@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ loc.DashboardTitle }}</title>
+    <style>
+        body { font-family: Arial, max-width: 800px; margin: 0 auto; padding: 20px; }
+        .box { border: 1px solid #ccc; padding: 20px; margin: 10px; }
+        button { padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
+        .logout { background: #dc3545; }
+        select, input { padding: 8px; margin: 5px 0; width: 100%; }
+        .error { color: red; margin: 10px 0; padding: 10px; border: 1px solid red; }
+        .success { color: green; margin: 10px 0; padding: 10px; border: 1px solid green; }
+    </style>
+</head>
+<body>
+    <h1>{{ loc.DashboardTitle }}</h1>
+    <p>{{ loc.WelcomeMessage.format(name=user.first_name) }}</p>
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+    {% if success %}
+    <div class="success">{{ success }}</div>
+    {% endif %}
+
+    <div class="box">
+        <h2>{{ loc.CreateAccountTitle }}</h2>
+        <form action="/create_bank_account" method="POST">
+            <input type="number" name="account_number" placeholder="{{ loc.AccountNumberPlaceholder }}" required><br>
+            <select name="account_currency" required>
+                {% for currency in currencies %}
+                <option value="{{ currency }}">{{ currency }}</option>
+                {% endfor %}
+            </select><br>
+            <input type="number" name="balance" placeholder="{{ loc.InitialBalancePlaceholder }}" required><br>
+            <button type="submit">{{ loc.CreateAccountBtn }}</button>
+        </form>
+    </div>
+
+    <div class="box">
+        <h2>{{ loc.ExchangeTitle }}</h2>
+        <form action="/exchange" method="POST">
+            <input type="number" name="account_sender" placeholder="{{ loc.AccountFromPlaceholder }}" required><br><br>
+            <input type="number" name="account_receiver" placeholder="{{ loc.AccountToPlaceholder }}" required><br><br>
+            <input type="number" step="0.01" name="amount" placeholder="{{ loc.AmountPlaceholder }}" required><br>
+            <button type="submit">{{ loc.ExchangeBtn }}</button>
+        </form>
+    </div>
+
+    <div class="box">
+        <button id="showRatesBtn">{{ loc.ShowRatesBtn }}</button>
+
+        <div id="exchangeRatesContainer" style="display: none;">
+            <h2>{{ loc.ExchangeRatesTitle }}</h2>
+            <table border="1">
+                <tr>
+                    <th>{{ loc.CurrencyHeader }}</th>
+                    <th>{{ loc.RateHeader }}</th>
+                </tr>
+                {% for currency, rate in currencies.items() %}
+                <tr>
+                    <td>{{ currency }}</td>
+                    <td>{{ rate }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <script>
+            document.getElementById('showRatesBtn').addEventListener('click', function() {
+                const container = document.getElementById('exchangeRatesContainer');
+                if (container.style.display === 'none') {
+                    container.style.display = 'block';
+                    this.textContent = '{{ loc.HideRatesBtn }}';
+                } else {
+                    container.style.display = 'none';
+                    this.textContent = '{{ loc.ShowRatesBtn }}';
+                }
+            });
+        </script>
+    </div>
+
+    <form action="/logout" method="POST">
+        <button type="submit" class="logout">{{ loc.LogoutBtn }}</button>
+    </form>
+</body>
+</html>

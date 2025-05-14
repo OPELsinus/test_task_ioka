@@ -1,14 +1,6 @@
 from typing import Any
 
-from pydantic import BaseModel
-
-
-class CreateBankAccountRequest(BaseModel):
-    account_number: int
-    holder_first_name: str
-    holder_last_name: str
-    balance: int = 0
-    email: str = ''
+from pydantic import BaseModel, EmailStr
 
 
 class TransferRequest(BaseModel):
@@ -17,7 +9,26 @@ class TransferRequest(BaseModel):
     amount: int = 0
 
 
-class StatusRequest(BaseModel):
+class CreateUserAccount(BaseModel):
+    first_name: str
+    last_name: str
+    email: EmailStr
+    login: str
+    password: str
+
+
+class LoginRequest(BaseModel):
+    login: str
+    password: str
+
+
+class CreateBankAccountRequest(BaseModel):
     account_number: int
+    balance: int = 0
+    account_currency: str
 
 
+class ExchangeRequest(BaseModel):
+    account_sender: str
+    account_receiver: str
+    amount: float

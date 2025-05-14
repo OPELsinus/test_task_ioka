@@ -19,6 +19,5 @@ class StatusResponse(BaseModel):
 
 
 class ExchangeRateResponse(BaseModel):
-    currencies: dict = {}
+    currencies: dict
     error_text: str | None = None
-
